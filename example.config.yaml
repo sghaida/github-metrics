@@ -1,0 +1,13 @@
+token: "github token"
+org: "some-org"
+repos:
+  frontend:
+    - "some repo"
+  backend:
+    - "some repo"
+
+teams:
+  frontend:
+    - "github user"
+  backend:
+    - "github user"
