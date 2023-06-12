@@ -113,8 +113,15 @@ func (e *ExcelOps) AppendData(prs RepoPrs) error {
 
 		// add comments
 		for _, comment := range pr.CommentInfo {
+
+			createdAt := comment.CreatedAt.GetTime()
+			creationDate := createdAt.Format("01/02/2006 15:04:05")
+
+			updatedAt := comment.UpdatedAt.GetTime()
+			updateDate := updatedAt.Format("01/02/2006 15:04:05")
+
 			e.Comments = append(e.Comments, []interface{}{
-				prs.Repo, pr.OwnerName, comment.OwnerName, comment.CreatedAt, comment.UpdatedAt,
+				prs.Repo, pr.OwnerName, comment.OwnerName, creationDate, updateDate,
 			})
 		}
 
