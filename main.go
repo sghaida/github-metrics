@@ -1,13 +1,24 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/sghaida/github-metrics/src"
 	"golang.org/x/net/context"
 	"time"
 )
 
+var (
+	outputFilePath string
+)
+
+func init() {
+	flag.StringVar(&outputFilePath, "out", "/tmp", "define where to dump the generate excel file")
+	flag.Parse()
+}
+
 func main() {
+
 	config := src.GetConfig()
 	ac := src.NewClient(config.Token)
 	client := ac.Create(context.Background())
@@ -34,8 +45,8 @@ func main() {
 			return
 		}
 	}
-
-	if err := excel.WriteFile("metrics.xlsx"); err != nil {
+	path := fmt.Sprintf("%s/metrics.xlsx", outputFilePath)
+	if err := excel.WriteFile(path); err != nil {
 		fmt.Println(err)
 	}
 }

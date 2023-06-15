@@ -4,11 +4,26 @@ you can use this project to get Repo average PR review time, along bunch of othe
 please refer to the generated `metrics.xlsx` for more details.
 
 ## how to run
-*  refer to [example config](./example.config.yaml) to create `config.yml` under the same place
-*  run the app using the following command
+
+refer to [example config](./example.config.yaml) to create `config.yml` under the same place
+
+### running from container
+
+please note that the generated output by default will be under `/tmp/github-metrics/metrics.xlsx`
+as the container mounting `/tmp/github-metrics` from the host, if you wish to change that please update [Dockerfile](./Dockerfile) and [Makefile](./Makefile) accordingly
+
+
 ```shell
-make run
+make docker-build
+make docker-run
 ```
-*  check generated `metrics.xlsx` for the nice repos data
+
+### running locally
+
+please make sure `OUTPUT_PATH` is writable directory
+
+```shell
+OUTPUT_PATH=/tmp make run
+```
 
 

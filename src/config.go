@@ -33,8 +33,9 @@ func GetConfig() *Config {
 
 		viper.SetConfigName("config")
 		viper.SetConfigType("yaml")
-		viper.AddConfigPath("..")
 		viper.AddConfigPath(".")
+		viper.AddConfigPath("..")
+		viper.AddConfigPath("/app")
 
 		err := viper.ReadInConfig()
 		if err != nil {
