@@ -10,3 +10,6 @@ go.work
 .idea
 config.yaml
 metrics.xlsx
+
+# binary
+github-metrics
