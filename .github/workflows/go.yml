@@ -24,7 +24,8 @@ jobs:
     - name: Build
       run: go build -v ./...
 
+    - name: rename config
+      run:  mv example.config.yml config.yml
+    
     - name: Test
-      run: |
-        mv example.config.yml config.yml
-        go test -v ./...
+      run: go test -v ./...
