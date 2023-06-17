@@ -11,6 +11,7 @@ func GetRepoPrs(
 	ctx context.Context,
 	from, to time.Time,
 	owner, repo string,
+	contributors map[string]SquadMember,
 	client *github.Client,
 ) ([]PRInfo, error) {
 
@@ -62,6 +63,7 @@ func GetRepoPrs(
 func GetPrComments(
 	ctx context.Context,
 	org, repo, owner string,
+	contributors map[string]SquadMember,
 	prNumber int,
 	client *github.Client) ([]CommentInfo, error) {
 

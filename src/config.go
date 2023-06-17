@@ -17,15 +17,15 @@ type Repo struct {
 }
 
 type Team struct {
-	Frontend []string `mapstructure:"frontend"`
-	Backend  []string `mapstructure:"backend"`
+	Name    TeamType `mapstructure:"name"`
+	Members []string `mapstructure:"members"`
 }
 
 type Config struct {
-	Token string `mapstructure:"token" yaml:"token"`
-	Org   string `mapstructure:"org" yaml:"org"`
-	Repos Repo   `mapstructure:"repos" yaml:"repos"`
-	Teams Team   `mapstructure:"teams" yaml:"teams"`
+	Token string            `mapstructure:"token" yaml:"token"`
+	Org   string            `mapstructure:"org" yaml:"org"`
+	Repos Repo              `mapstructure:"repos" yaml:"repos"`
+	Teams map[string][]Team `mapstructure:"teams" yaml:"teams"`
 }
 
 func GetConfig() *Config {

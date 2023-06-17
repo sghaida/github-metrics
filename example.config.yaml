@@ -7,7 +7,27 @@ repos:
     - "some repo"
 
 teams:
-  frontend:
-    - "github user"
-  backend:
-    - "github user"
+  # you can multiple squads different squad
+  # each squad is composed of multiple teams
+  # supported team names are frontend | backend | mobile | devops
+  # if you wish to add more teams please refer to models -> L:9 add new const for new teams
+  # team members is an array and the value is there github login
+  squad1:
+    - name: backend
+      members:
+        - user1
+        - user2
+    - name: frontend
+      members:
+        - user3
+        - user4
+  squad2:
+    - name: mobile
+      members:
+        - user5
+        - user6
+    - name: backend
+      members:
+        - user7
+        - user8
+

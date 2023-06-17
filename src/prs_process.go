@@ -15,28 +15,30 @@ type RepoPrs struct {
 }
 
 type PRProcessor struct {
-	wg     *sync.WaitGroup
-	ch     chan<- RepoPrs
-	client *github.Client
-	config *Config
+	wg           *sync.WaitGroup
+	ch           chan<- RepoPrs
+	client       *github.Client
+	config       *Config
+	contributors map[string]SquadMember
 }
 
 // NewPRProcessor create new PR processor
-func NewPRProcessor(client *github.Client, conf *Config, send chan<- RepoPrs) *PRProcessor {
+func NewPRProcessor(client *github.Client, conf *Config, ics map[string]SquadMember, send chan<- RepoPrs) *PRProcessor {
 	return &PRProcessor{
-		wg:     new(sync.WaitGroup),
-		ch:     send,
-		client: client,
-		config: conf,
+		wg:           new(sync.WaitGroup),
+		ch:           send,
+		contributors: ics,
+		client:       client,
+		config:       conf,
 	}
 }
 
-func (p *PRProcessor) process(owner, repo string, counter *int32, from, to time.Time) {
+func (p *PRProcessor) process(repo string, counter *int32, from, to time.Time) {
 	var enrichedPrs []PRInfo
 	ctx := context.Background()
 
 	prs, err := GetRepoPrs(
-		ctx, from, to, p.config.Org, repo, p.client,
+		ctx, from, to, p.config.Org, repo, p.contributors, p.client,
 	)
 	if err != nil {
 		fmt.Println(err)
@@ -44,7 +46,7 @@ func (p *PRProcessor) process(owner, repo string, counter *int32, from, to time.
 	}
 
 	for _, pr := range prs {
-		comments, err := GetPrComments(ctx, p.config.Org, repo, pr.OwnerName, pr.PrNumber, p.client)
+		comments, err := GetPrComments(ctx, p.config.Org, repo, pr.OwnerName, p.contributors, pr.PrNumber, p.client)
 		if err != nil {
 			fmt.Println(err)
 			continue
@@ -65,10 +67,10 @@ func (p *PRProcessor) GetPrs(from, to time.Time) {
 	atomic.StoreInt32(&counter, 0)
 
 	for _, repo := range p.config.Repos.Backend {
-		go p.process(config.Org, repo, &counter, from, to)
+		go p.process(repo, &counter, from, to)
 	}
 	for _, repo := range p.config.Repos.Frontend {
-		go p.process(config.Org, repo, &counter, from, to)
+		go p.process(repo, &counter, from, to)
 	}
 
 	p.wg.Add(1)

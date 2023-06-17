@@ -23,12 +23,26 @@ func main() {
 	ac := src.NewClient(config.Token)
 	client := ac.Create(context.Background())
 
+	// build teams hierarchy
+	contributors := make(map[string]src.SquadMember)
+	for squad, teams := range config.Teams {
+		for _, team := range teams {
+			for _, ic := range team.Members {
+				contributors[ic] = src.SquadMember{
+					LoginName: ic,
+					SquadName: squad,
+					Team:      team.Name,
+				}
+			}
+		}
+	}
+
 	// Specify the date range
 	from := time.Date(2023, time.May, 1, 0, 0, 0, 0, time.UTC)
 	to := time.Date(2023, time.May, 31, 23, 59, 59, 0, time.UTC)
 
 	prChan := make(chan src.RepoPrs, 10)
-	prProcessor := src.NewPRProcessor(client, config, prChan)
+	prProcessor := src.NewPRProcessor(client, config, contributors, prChan)
 
 	prProcessor.GetPrs(from, to)
 
