@@ -28,15 +28,17 @@ func GetRepoPrs(
 			return allPRs, err
 		}
 		for _, pr := range prs {
+			contributor := contributors[pr.User.GetLogin()]
 			prInfo := PRInfo{
-				OwnerName:  pr.User.GetLogin(),
-				OwnerEmail: pr.User.GetEmail(),
-				OwnerID:    pr.User.GetID(),
-				Repo:       repo,
-				PrNumber:   *pr.Number,
-				CreatedAt:  pr.GetCreatedAt(),
-				UpdatedAt:  pr.GetUpdatedAt(),
-				MergedAt:   pr.GetMergedAt(),
+				OwnerName:       pr.User.GetLogin(),
+				OwnerEmail:      pr.User.GetEmail(),
+				OwnerID:         pr.User.GetID(),
+				Repo:            repo,
+				PrNumber:        *pr.Number,
+				contributorInfo: contributor,
+				CreatedAt:       pr.GetCreatedAt(),
+				UpdatedAt:       pr.GetUpdatedAt(),
+				MergedAt:        pr.GetMergedAt(),
 			}
 			allPRs = append(allPRs, prInfo)
 		}
@@ -87,16 +89,17 @@ func GetPrComments(
 			if comment.User.GetLogin() == owner {
 				continue
 			}
-
+			contributor := contributors[comment.User.GetLogin()]
 			prComment := CommentInfo{
-				ID:         comment.GetID(),
-				OwnerName:  comment.User.GetLogin(),
-				OwnerEmail: comment.User.GetEmail(),
-				OwnerID:    comment.User.GetID(),
-				Repo:       repo,
-				PrNumber:   prNumber,
-				CreatedAt:  comment.GetCreatedAt(),
-				UpdatedAt:  comment.GetUpdatedAt(),
+				ID:              comment.GetID(),
+				OwnerName:       comment.User.GetLogin(),
+				OwnerEmail:      comment.User.GetEmail(),
+				OwnerID:         comment.User.GetID(),
+				Repo:            repo,
+				PrNumber:        prNumber,
+				contributorInfo: contributor,
+				CreatedAt:       comment.GetCreatedAt(),
+				UpdatedAt:       comment.GetUpdatedAt(),
 			}
 			allComments = append(allComments, prComment)
 

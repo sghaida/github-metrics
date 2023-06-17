@@ -49,10 +49,10 @@ func (e *ExcelOps) NewExcelFile() error {
 	}
 
 	prsData := [][]interface{}{
-		{"Repo", "PR Owner", "status", "Created At", "Updated At", "Merged At", "UntilMerged"},
+		{"Repo", "PR Owner", "Squad", "Team", "Status", "Created At", "Updated At", "Merged At", "UntilMerged"},
 	}
 	commentsData := [][]interface{}{
-		{"Repo", "PR Owner", "Comment Owner", "Created At", "Updated At"},
+		{"Repo", "PR Owner", "Squad", "Team", "Comment Owner", "Owner Squad", "Owner Team", "Created At", "Updated At"},
 	}
 
 	prsSummaryData := [][]interface{}{
@@ -94,7 +94,8 @@ func (e *ExcelOps) AppendData(prs RepoPrs) error {
 			durations = append(durations, hours)
 
 			e.Prs = append(e.Prs, []interface{}{
-				prs.Repo, pr.OwnerName, "Open", creationDate, updateDate, nil, hours,
+				prs.Repo, pr.OwnerName, pr.contributorInfo.SquadName, pr.contributorInfo.Team,
+				"Open", creationDate, updateDate, nil, hours,
 			})
 
 		} else {
@@ -107,7 +108,8 @@ func (e *ExcelOps) AppendData(prs RepoPrs) error {
 			MergeDate := mergedAt.Format("01/02/2006 15:04:05")
 
 			e.Prs = append(e.Prs, []interface{}{
-				prs.Repo, pr.OwnerName, "Close", creationDate, updateDate, MergeDate, hours,
+				prs.Repo, pr.OwnerName, pr.contributorInfo.SquadName, pr.contributorInfo.Team,
+				"Close", creationDate, updateDate, MergeDate, hours,
 			})
 		}
 
@@ -121,7 +123,9 @@ func (e *ExcelOps) AppendData(prs RepoPrs) error {
 			updateDate := updatedAt.Format("01/02/2006 15:04:05")
 
 			e.Comments = append(e.Comments, []interface{}{
-				prs.Repo, pr.OwnerName, comment.OwnerName, creationDate, updateDate,
+				prs.Repo, pr.OwnerName, pr.contributorInfo.SquadName, pr.contributorInfo.Team,
+				comment.OwnerName, comment.contributorInfo.SquadName, comment.contributorInfo.Team,
+				creationDate, updateDate,
 			})
 		}
 
