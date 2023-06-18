@@ -51,7 +51,15 @@ func (p *PRProcessor) process(repo string, counter *int32, from, to time.Time) {
 			fmt.Println(err)
 			continue
 		}
+		additions, deletions, err := GetPRLoc(ctx, p.config.Org, repo, pr.PrNumber, p.client)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
 		pr.CommentInfo = comments
+		pr.LinesAdded = additions
+		pr.LinesDeleted = deletions
+		pr.NumOfComments = len(pr.CommentInfo)
 		enrichedPrs = append(enrichedPrs, pr)
 	}
 
@@ -85,5 +93,4 @@ func (p *PRProcessor) GetPrs(from, to time.Time) {
 			time.Sleep(1 * time.Second)
 		}
 	}()
-
 }

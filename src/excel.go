@@ -49,14 +49,15 @@ func (e *ExcelOps) NewExcelFile() error {
 	}
 
 	prsData := [][]interface{}{
-		{"Repo", "PR Owner", "Squad", "Team", "Status", "Created At", "Updated At", "Merged At", "UntilMerged"},
+		{"Repo", "PR Owner", "Squad", "Team", "Status",
+			"Additions", "deletions", "Comments", "Created At", "Updated At", "Merged At", "UntilMerged"},
 	}
 	commentsData := [][]interface{}{
 		{"Repo", "PR Owner", "Squad", "Team", "Comment Owner", "Owner Squad", "Owner Team", "Created At", "Updated At"},
 	}
 
 	prsSummaryData := [][]interface{}{
-		{"Repo", "contributions", "AVG Waiting time", "MDN Waiting time"},
+		{"Repo", "contributions", "AVG of Addition", "AVG of Deletions", "AVG of comments", "AVG Waiting time", "MDN Waiting time"},
 	}
 
 	e.f = f
@@ -95,7 +96,7 @@ func (e *ExcelOps) AppendData(prs RepoPrs) error {
 
 			e.Prs = append(e.Prs, []interface{}{
 				prs.Repo, pr.OwnerName, pr.contributorInfo.SquadName, pr.contributorInfo.Team,
-				"Open", creationDate, updateDate, nil, hours,
+				"Open", pr.LinesAdded, pr.LinesDeleted, pr.NumOfComments, creationDate, updateDate, nil, hours,
 			})
 
 		} else {
@@ -109,7 +110,7 @@ func (e *ExcelOps) AppendData(prs RepoPrs) error {
 
 			e.Prs = append(e.Prs, []interface{}{
 				prs.Repo, pr.OwnerName, pr.contributorInfo.SquadName, pr.contributorInfo.Team,
-				"Close", creationDate, updateDate, MergeDate, hours,
+				"Close", pr.LinesAdded, pr.LinesDeleted, pr.NumOfComments, creationDate, updateDate, MergeDate, hours,
 			})
 		}
 
@@ -131,11 +132,37 @@ func (e *ExcelOps) AppendData(prs RepoPrs) error {
 
 	}
 	avg, mdn := e.calculateSummaries(durations)
+	additionsAvg, deletionsAvg, commentsAvg := e.calculateAverages(prs.Prs)
 	e.summaries = append(e.summaries, []interface{}{
-		prs.Repo, len(durations), math.Round(avg), mdn,
+		prs.Repo, len(durations), additionsAvg, deletionsAvg, commentsAvg, math.Round(avg), mdn,
 	})
 
 	return e.setSheetsData()
+}
+
+func (e *ExcelOps) calculateAverages(prs []PRInfo) (additions, deletions, comments int) {
+	type sums struct {
+		additions int
+		deletions int
+		comments  int
+		prsCount  int
+	}
+
+	res := list.FoldLeft(prs, sums{}, func(acc sums, value PRInfo) sums {
+		acc.additions += value.LinesAdded
+		acc.deletions += value.LinesDeleted
+		acc.comments += value.NumOfComments
+		acc.prsCount += 1
+		return acc
+	})
+
+	if len(prs) != 0 {
+		additions = int(math.Round(float64(res.additions / res.prsCount)))
+		deletions = int(math.Round(float64(res.deletions / res.prsCount)))
+		comments = int(math.Round(float64(res.comments / res.prsCount)))
+		return
+	}
+	return
 }
 
 func (e *ExcelOps) calculateSummaries(durations []float64) (avg float64, mdn float64) {

@@ -32,11 +32,14 @@ type PRInfo struct {
 	OwnerEmail      string
 	Repo            string
 	PrNumber        int
+	LinesAdded      int
+	LinesDeleted    int
+	NumOfComments   int
+	contributorInfo SquadMember
+	CommentInfo     []CommentInfo
 	CreatedAt       github.Timestamp
 	UpdatedAt       github.Timestamp
 	MergedAt        github.Timestamp
-	contributorInfo SquadMember
-	CommentInfo     []CommentInfo
 }
 
 // SquadMember individual contributor info
