@@ -10,8 +10,9 @@ import (
 )
 
 type RepoPrs struct {
-	Repo string
-	Prs  []PRInfo
+	Repo      string
+	OwnerTeam TeamType
+	Prs       []PRInfo
 }
 
 type PRProcessor struct {
@@ -33,7 +34,7 @@ func NewPRProcessor(client *github.Client, conf *Config, ics map[string]SquadMem
 	}
 }
 
-func (p *PRProcessor) process(repo string, counter *int32, from, to time.Time) {
+func (p *PRProcessor) process(repo string, team TeamType, counter *int32, from, to time.Time) {
 	var enrichedPrs []PRInfo
 	ctx := context.Background()
 
@@ -56,29 +57,34 @@ func (p *PRProcessor) process(repo string, counter *int32, from, to time.Time) {
 			fmt.Println(err)
 			continue
 		}
+
+		pr.Team = team
 		pr.CommentInfo = comments
 		pr.LinesAdded = additions
 		pr.LinesDeleted = deletions
+		pr.TotalLinesChanged = additions + deletions
 		pr.NumOfComments = len(pr.CommentInfo)
 		enrichedPrs = append(enrichedPrs, pr)
 	}
 
 	p.ch <- RepoPrs{
-		Repo: repo,
-		Prs:  enrichedPrs,
+		Repo:      repo,
+		OwnerTeam: team,
+		Prs:       enrichedPrs,
 	}
 	atomic.AddInt32(counter, 1)
 }
 
 func (p *PRProcessor) GetPrs(from, to time.Time) {
 	var counter int32
+	var reposCounter int
 	atomic.StoreInt32(&counter, 0)
 
-	for _, repo := range p.config.Repos.Backend {
-		go p.process(repo, &counter, from, to)
-	}
-	for _, repo := range p.config.Repos.Frontend {
-		go p.process(repo, &counter, from, to)
+	for _, repos := range p.config.Repos {
+		for _, repo := range repos.Names {
+			go p.process(repo, repos.Type, &counter, from, to)
+			reposCounter++
+		}
 	}
 
 	p.wg.Add(1)
@@ -86,7 +92,7 @@ func (p *PRProcessor) GetPrs(from, to time.Time) {
 		defer p.wg.Done()
 		for {
 			c := atomic.LoadInt32(&counter)
-			if c == int32(len(config.Repos.Backend)+len(config.Repos.Frontend)) {
+			if c == int32(reposCounter) {
 				close(p.ch)
 				break
 			}

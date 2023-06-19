@@ -12,8 +12,8 @@ var (
 )
 
 type Repo struct {
-	Frontend []string `mapstructure:"frontend"`
-	Backend  []string `mapstructure:"backend"`
+	Type  TeamType `mapstructure:"type"`
+	Names []string `mapstructure:"names"`
 }
 
 type Team struct {
@@ -24,7 +24,7 @@ type Team struct {
 type Config struct {
 	Token string            `mapstructure:"token" yaml:"token"`
 	Org   string            `mapstructure:"org" yaml:"org"`
-	Repos Repo              `mapstructure:"repos" yaml:"repos"`
+	Repos []Repo            `mapstructure:"repos" yaml:"repos"`
 	Teams map[string][]Team `mapstructure:"teams" yaml:"teams"`
 }
 

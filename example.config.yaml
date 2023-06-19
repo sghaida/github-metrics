@@ -1,10 +1,18 @@
 token: "github token"
 org: "some-org"
 repos:
-  frontend:
-    - "some repo"
-  backend:
-    - "some repo"
+  # you can add multiple Repo types
+  # where the name could be frontend | backend | mobile | devops
+  # names is a list of repo names
+  - type: frontend
+    names:
+      - some-repo-1
+  - type: backend
+    names:
+      - some-repo-2
+  - type: mobile
+    names:
+      - some-repo-3
 
 teams:
   # you can multiple squads different squad

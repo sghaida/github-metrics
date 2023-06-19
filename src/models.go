@@ -27,19 +27,22 @@ type CommentInfo struct {
 
 // PRInfo contains a subset of the github.PullRequest model payload
 type PRInfo struct {
-	OwnerName       string
-	OwnerID         int64
-	OwnerEmail      string
-	Repo            string
-	PrNumber        int
-	LinesAdded      int
-	LinesDeleted    int
-	NumOfComments   int
-	contributorInfo SquadMember
-	CommentInfo     []CommentInfo
-	CreatedAt       github.Timestamp
-	UpdatedAt       github.Timestamp
-	MergedAt        github.Timestamp
+	OwnerName         string
+	OwnerID           int64
+	OwnerEmail        string
+	Repo              string
+	Team              TeamType
+	PrNumber          int
+	PrLink            string
+	LinesAdded        int
+	LinesDeleted      int
+	TotalLinesChanged int
+	NumOfComments     int
+	contributorInfo   SquadMember
+	CommentInfo       []CommentInfo
+	CreatedAt         github.Timestamp
+	UpdatedAt         github.Timestamp
+	MergedAt          github.Timestamp
 }
 
 // SquadMember individual contributor info
