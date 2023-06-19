@@ -3,6 +3,7 @@
 # GitHub PR metrics
 you can use this project to get Repo average PR review time, along bunch of other data
 please refer to the generated `metrics.xlsx` for more details.
+to see an example of the generated sheets, please refer to [metrics](./data/metrics.xlsx). please note that the sheet is just an example. 
 
 ## how to run
 
