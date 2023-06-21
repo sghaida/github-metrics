@@ -51,7 +51,7 @@ func main() {
 		log.Fatalf("error parsing to date: %s", err.Error())
 	}
 
-	prChan := make(chan src.RepoPrs, 10)
+	prChan := make(chan src.RepoPrs, 1000)
 	prProcessor := src.NewPRProcessor(ac, config, contributors, prChan)
 	prProcessor.GetPrs(from, to)
 

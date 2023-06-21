@@ -12,7 +12,7 @@ func GetRepoPrs(
 	from, to time.Time,
 	owner, repo string,
 	contributors map[string]SquadMember,
-	client *GithubClientsPool,
+	client *github.Client,
 ) ([]PRInfo, error) {
 
 	opts := &github.PullRequestListOptions{
@@ -24,7 +24,7 @@ func GetRepoPrs(
 
 	var lstOfMatchingPRs []PRInfo
 	for {
-		prs, resp, err := client.Get().PullRequests.List(ctx, owner, repo, opts)
+		prs, resp, err := client.PullRequests.List(ctx, owner, repo, opts)
 		if err != nil {
 			return lstOfMatchingPRs, err
 		}
@@ -73,7 +73,7 @@ func GetPrComments(
 	org, repo, owner string,
 	contributors map[string]SquadMember,
 	prNumber int,
-	client *GithubClientsPool) ([]CommentInfo, error) {
+	client *github.Client) ([]CommentInfo, error) {
 
 	opts := &github.PullRequestListCommentsOptions{
 		ListOptions: github.ListOptions{
@@ -83,8 +83,8 @@ func GetPrComments(
 
 	var allComments []CommentInfo
 	for {
-		comments, resp, err := client.Get().PullRequests.ListComments(
-			ctx, org, repo, prNumber, nil,
+		comments, resp, err := client.PullRequests.ListComments(
+			ctx, org, repo, prNumber, opts,
 		)
 		if err != nil {
 			return allComments, err
@@ -123,14 +123,14 @@ func GetPRLoc(
 	ctx context.Context,
 	org, repo string,
 	prNumber int,
-	client *GithubClientsPool,
+	client *github.Client,
 ) (additions, deletions int, err error) {
 
 	opts := github.ListOptions{
 		PerPage: 100,
 	}
 	for {
-		files, resp, err := client.Get().PullRequests.ListFiles(ctx, org, repo, prNumber, &opts)
+		files, resp, err := client.PullRequests.ListFiles(ctx, org, repo, prNumber, &opts)
 		if err != nil {
 			return 0, 0, err
 		}

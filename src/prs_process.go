@@ -36,9 +36,10 @@ func NewPRProcessor(client *GithubClientsPool, conf *Config, ics map[string]Squa
 func (p *PRProcessor) process(repo string, team TeamType, counter *int32, from, to time.Time) {
 	var enrichedPrs []PRInfo
 	ctx := context.Background()
+	client := p.client.Get()
 
 	prs, err := GetRepoPrs(
-		ctx, from, to, p.config.Org, repo, p.contributors, p.client,
+		ctx, from, to, p.config.Org, repo, p.contributors, client,
 	)
 	if err != nil {
 		fmt.Println(err)
@@ -46,12 +47,12 @@ func (p *PRProcessor) process(repo string, team TeamType, counter *int32, from, 
 	}
 
 	for _, pr := range prs {
-		comments, err := GetPrComments(ctx, p.config.Org, repo, pr.OwnerName, p.contributors, pr.PrNumber, p.client)
+		comments, err := GetPrComments(ctx, p.config.Org, repo, pr.OwnerName, p.contributors, pr.PrNumber, client)
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
-		additions, deletions, err := GetPRLoc(ctx, p.config.Org, repo, pr.PrNumber, p.client)
+		additions, deletions, err := GetPRLoc(ctx, p.config.Org, repo, pr.PrNumber, client)
 		if err != nil {
 			fmt.Println(err)
 			continue
