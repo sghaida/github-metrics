@@ -7,9 +7,13 @@
 *.out
 go.work
 
+# directories
 .idea
-config.yaml
+reporting/.ipynb_checkpoints
 
+#files
+config.yaml
+metrics.xlsx
 
 # binary
 github-metrics
