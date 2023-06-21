@@ -21,11 +21,14 @@ make docker-run
 ```
 
 ### running locally
+please note the following command line arguments 
+* **out**: define the output directory of the generated Excel sheet, default to `/tmp`
+* **from**: from date that would be used to read the contributions from, default `begining of the current month`
+* **to**: to date that would be used to read the contributions from, default `end of the current month`
 
-please make sure `OUTPUT_PATH` is writable directory
-
+#### to run
 ```shell
-OUTPUT_PATH=/tmp make run
+go build -v -o github-metrics
+./github-metrics -out=/tmp -from=2023-01-01 -to=2023-05-01
 ```
-
 
