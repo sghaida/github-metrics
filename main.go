@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/sghaida/github-metrics/src"
-	"golang.org/x/net/context"
 	"log"
 	"time"
 )
@@ -27,8 +26,7 @@ func init() {
 func main() {
 
 	config := src.GetConfig()
-	ac := src.NewClient(config.Token)
-	client := ac.Create(context.Background())
+	ac := src.NewGithubClientsPool(config.Tokens)
 
 	// build teams hierarchy
 	contributors := make(map[string]src.SquadMember)
@@ -54,7 +52,7 @@ func main() {
 	}
 
 	prChan := make(chan src.RepoPrs, 10)
-	prProcessor := src.NewPRProcessor(client, config, contributors, prChan)
+	prProcessor := src.NewPRProcessor(ac, config, contributors, prChan)
 	prProcessor.GetPrs(from, to)
 
 	excel := src.ExcelOps{}

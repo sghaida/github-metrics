@@ -1,4 +1,6 @@
-token: "github token"
+tokens:
+  - "github token1"
+  - "github token2"
 org: "some-org"
 repos:
   # you can add multiple Repo types

@@ -22,10 +22,10 @@ type Team struct {
 }
 
 type Config struct {
-	Token string            `mapstructure:"token" yaml:"token"`
-	Org   string            `mapstructure:"org" yaml:"org"`
-	Repos []Repo            `mapstructure:"repos" yaml:"repos"`
-	Teams map[string][]Team `mapstructure:"teams" yaml:"teams"`
+	Tokens []string          `mapstructure:"tokens" yaml:"token"`
+	Org    string            `mapstructure:"org" yaml:"org"`
+	Repos  []Repo            `mapstructure:"repos" yaml:"repos"`
+	Teams  map[string][]Team `mapstructure:"teams" yaml:"teams"`
 }
 
 func GetConfig() *Config {

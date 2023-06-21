@@ -3,7 +3,6 @@ package src
 import (
 	"context"
 	"fmt"
-	"github.com/google/go-github/v53/github"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -18,13 +17,13 @@ type RepoPrs struct {
 type PRProcessor struct {
 	wg           *sync.WaitGroup
 	ch           chan<- RepoPrs
-	client       *github.Client
+	client       *GithubClientsPool
 	config       *Config
 	contributors map[string]SquadMember
 }
 
 // NewPRProcessor create new PR processor
-func NewPRProcessor(client *github.Client, conf *Config, ics map[string]SquadMember, send chan<- RepoPrs) *PRProcessor {
+func NewPRProcessor(client *GithubClientsPool, conf *Config, ics map[string]SquadMember, send chan<- RepoPrs) *PRProcessor {
 	return &PRProcessor{
 		wg:           new(sync.WaitGroup),
 		ch:           send,
