@@ -1,6 +1,6 @@
 [![Go](https://github.com/sghaida/github-metrics/actions/workflows/go.yml/badge.svg)](https://github.com/sghaida/github-metrics/actions/workflows/go.yml)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/29f8ca49a29e4e8b99bbd61709b5dae6)](https://app.codacy.com/gh/sghaida/github-metrics/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![GitHub Clones](https://img.shields.io/badge/dynamic/json?color=success&label=Clone&query=count&url=https://gist.githubusercontent.com/sghaida/eb0d6e03ce7d492166e3fba3f9539886/raw/clone.json&logo=github)](https://github.com/MShawon/github-clone-count-badge)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/29f8ca49a29e4e8b99bbd61709b5dae6)](https://app.codacy.com/gh/sghaida/github-metrics/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 # GitHub PR metrics
 you can use this project to get Repo average PR review time, along bunch of other data
