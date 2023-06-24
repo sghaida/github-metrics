@@ -13,14 +13,10 @@ RUN go get -d -v
 RUN go build -v -o /go/bin/github-metrics
 
 FROM alpine:3.18
-#    set -x && \
-#    apt-get update && \
-#    DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates && \
-#    rm -rf /var/lib/apt/lists/*
+
 RUN apk update && apk add --no-cache git
 
 COPY config.yaml /app/config.yaml
-
 COPY --from=builder /go/bin/github-metrics /app/github-metrics
 
 VOLUME /tmp/github-metrics
