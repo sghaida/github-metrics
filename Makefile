@@ -22,7 +22,7 @@ run: install-deps
 docker-build:
 	docker build -t github-metrics .
 
-docker-run:
+docker-run: docker-build
 	mkdir -p /tmp/github-metrics &> /dev/null
 
 	docker run \

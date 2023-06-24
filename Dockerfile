@@ -1,25 +1,27 @@
-FROM golang:1.19-buster as builder
+FROM golang:1.19-alpine3.18 as builder
+
+RUN apk update && apk add --no-cache git
 
 ENV OUTPUT_PATH=/tmp/github-metrics
 
-WORKDIR /app
+WORKDIR $GOPATH/src/pkg/app/
 
 COPY . .
 
-RUN make install-deps
+RUN go get -d -v
 
-RUN go build -v -o github-metrics
+RUN go build -v -o /go/bin/github-metrics
 
-FROM debian:buster-slim
-
-RUN set -x && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+FROM alpine:3.18
+#    set -x && \
+#    apt-get update && \
+#    DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates && \
+#    rm -rf /var/lib/apt/lists/*
+RUN apk update && apk add --no-cache git
 
 COPY config.yaml /app/config.yaml
-COPY --from=builder /app/github-metrics /app/github-metrics
+
+COPY --from=builder /go/bin/github-metrics /app/github-metrics
 
 VOLUME /tmp/github-metrics
 
