@@ -3,7 +3,7 @@ module github.com/sghaida/github-metrics
 go 1.20
 
 require (
-	github.com/gofri/go-github-ratelimit v1.0.3
+	github.com/gofri/go-github-ratelimit v1.0.4
 	github.com/google/go-github/v53 v53.2.0
 	github.com/sghaida/fpv2 v1.0.0
 	github.com/spf13/viper v1.16.0
